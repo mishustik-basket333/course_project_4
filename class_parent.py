@@ -75,10 +75,10 @@ class Vacancy:
 
 
     def __str__(self):
-        msg = f"Профессия: {self.title}     |     URL: {self.url} \n" \
-               f"Работодатель: {self.employer_name}     |     " \
-               f"{self.salary_currency}{self.salary_from}{self.salary_to}\n" \
-               f"Описание обязанностей: {self.responsibility}"
+        msg = f"{self.employer_name}  :  {self.title}\n" \
+              f"URL: {self.url} \n" \
+              f"{self.salary_currency}{self.salary_from}{self.salary_to}\n" \
+              f"Описание обязанностей: {self.responsibility}"
         return msg
 
 
