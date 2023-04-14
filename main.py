@@ -1,4 +1,6 @@
-from class_parent import *
+from class_super_job import *
+from class_head_hunter import *
+
 
 def main():
     """Основная функция кода"""
@@ -9,11 +11,11 @@ def main():
 
     # Создание экземпляра класса для работы с API сайтов с вакансиями
     hh_api = HeadHunterAPI()
-    # superjob_api = SuperJobAPI()
+    superjob_api = SuperJobAPI()
 
     # Получение вакансий с разных платформ
     hh_vacancies = hh_api.get_vacancies(key_name)
-    # superjob_vacancies = superjob_api.get_vacancies("Python")
+    superjob_vacancies = superjob_api.get_vacancies("Python developer")
 
     # Создание экземпляра класса для работы с вакансиями
     # vacancy = Vacancy("Python Developer", "<https://hh.ru/vacancy/123456>", "100 000-150 000 руб.",
