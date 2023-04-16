@@ -1,11 +1,8 @@
-from class_parent import *
-import requests
+from classes import *
+# import requests
 import json
 
-PRICE_EUR = 85
-PRICE_USD = 80
-
-class HeadHunterAPI(ParentClass):
+class HeadHunterAPI(ParentApiClass):
     """Класс для работы с API Head Hunter"""
 
     Page_count = 2
@@ -33,22 +30,6 @@ class HeadHunterAPI(ParentClass):
         return responce
 
 
-# if __name__ == "__main__":
-#     key_name = "python developer"
-#     hh_api = HeadHunterAPI()
-#     hh_vacancies = hh_api.get_vacancies(key_name)
-#     json_saver = JSONSaver(key_name, "head_hunter")
-#     json_saver.add_vacancy(hh_vacancies)
-#     print("")
-#     print("")
-#     vacansies = json_saver.select()
-#     sort_vacansies = sort_from_minimum_salary(vacansies, True)
-#     for row in sort_vacansies:
-#         print(row)
-#         print("")
-#         print("=" * 100)
-#         print("")
-#     print("the end")
 if __name__ == "__main__":
     key_name = "python"
     hh_api = HeadHunterAPI()
@@ -58,10 +39,12 @@ if __name__ == "__main__":
     print("")
     print("")
     vacansies = json_saver.select()
-    sort_vacansies = sort_from_minimum_salary(vacansies, True)
+    # sort_vacansies = sort_from_minimum_salary(vacansies, True)
+    sort_vacansies = get_vacancies_by_salary(vacansies, 40000, 600000)
     for row in sort_vacansies:
         print(row)
         print("")
         print("=" * 100)
         print("")
     print("the end")
+    print(len(sort_vacansies))

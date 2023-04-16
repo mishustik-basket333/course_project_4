@@ -1,5 +1,4 @@
-from class_super_job import *
-from class_head_hunter import *
+from classes import *
 
 
 def main():
@@ -15,15 +14,17 @@ def main():
 
     # Получение вакансий с разных платформ
     hh_vacancies = hh_api.get_vacancies(key_name)
-    superjob_vacancies = superjob_api.get_vacancies("Python developer")
+    sj_vacancies = superjob_api.get_vacancies("Python developer")
 
     # Создание экземпляра класса для работы с вакансиями
     # vacancy = Vacancy("Python Developer", "<https://hh.ru/vacancy/123456>", "100 000-150 000 руб.",
     #                   "Требования: опыт работы от 3 лет...")
 
     # # Сохранение информации о вакансиях в файл
-    json_saver = JSONSaver(key_name)
-    json_saver.add_vacancy(hh_vacancies)
+    json_saver_hh = JSONSaver(key_name, "HH")
+    json_saver_hh.add_vacancy(hh_vacancies)
+    json_saver_sj = JSONSaver(key_name, "SJ")
+    json_saver_sj.add_vacancy(sj_vacancies)
     # json_saver.get_vacancies_by_salary("100 000-150 000 руб.")
     # json_saver.delete_vacancy(vacancy)
     #

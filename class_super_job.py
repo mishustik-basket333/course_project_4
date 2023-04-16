@@ -1,11 +1,10 @@
-from class_parent import *
-import requests
+from classes import *
+# import requests
 import json
 
 key_job = "v3.r.137483720.787d25efef2944db00ee9f886f29e554297a5864.572b1f3347d6d3fe8b7962d6715b0bae18bafa3d"
 
-
-class SuperJobAPI(ParentClass):
+class SuperJobAPI(ParentApiClass):
     """Класс для взаимодейстивя с SuperJobAPI"""
 
     Page_count = 2
@@ -33,25 +32,13 @@ class SuperJobAPI(ParentClass):
 
 
 if __name__ == "__main__":
-
     key_name = "python"
-
     superjob_api = SuperJobAPI()
     sj_vacancies = superjob_api.get_vacancies(key_name)
     json_saver = JSONSaver(key_name, "SJ")
     json_saver.add_vacancy(sj_vacancies)
-
-    # for row in sj_vacancies:
-    #     print("="*100)
-    #     print(row['profession'])
-    #     print(row['link'])
-    #
-    # print("111")
-
     vacansies = json_saver.select()
-
     for i in vacansies:
         print(i)
         print("\n", "="*100,  "\n")
-
     print("\n\n", '*'*100, "\n\n", "the end")
