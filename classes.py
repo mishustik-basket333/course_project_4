@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from functions import *
-from global_variables import *
+from global_variables import PRICE_EUR, PRICE_USD, PAGE_COUNT, VACANCY_COUNT, key_job
 
 import requests
 import json
@@ -18,6 +17,18 @@ class ParentApiClass(ABC):
         pass
 
 
+class ParentJSONSaver(ABC):
+    """Родительский класс для классовб, работающих с данными о вакансиях """
+
+    @abstractmethod
+    def add_vacancy(self):
+        pass
+
+    @abstractmethod
+    def select(self):
+        pass
+
+
 class HeadHunterAPI(ParentApiClass):
     """Класс для работы с API Head Hunter"""
 
@@ -28,7 +39,11 @@ class HeadHunterAPI(ParentApiClass):
             "page": page,
             "per_page": VACANCY_COUNT,
         }
-        return requests.get("https://api.hh.ru/vacancies", params=params).json()["items"]
+        try:
+            return requests.get("https://api.hh.ru/vacancies", params=params).json()["items"]
+        except requests.exceptions.ConnectionError as e:
+            print(e)
+            print("Ошибка при запросе. Ошибка соединения")
 
     def get_vacancies(self, key_word):
         """Функция получает список заданных вакансию по кодовому слову и возвращает его"""
@@ -50,8 +65,12 @@ class SuperJobAPI(ParentApiClass):
             "page": page,
             "count": VACANCY_COUNT,
         }
-        response = requests.get('https://api.superjob.ru/2.0/vacancies/', headers=auth_data, params=params).json()[
-            "objects"]
+        try:
+            response = requests.get('https://api.superjob.ru/2.0/vacancies/', headers=auth_data, params=params).json()[
+                "objects"]
+        except requests.exceptions.ConnectionError as e:
+            print(e)
+            print("Ошибка при запросе. Ошибка соединения")
         return response
 
     def get_vacancies(self, key_word):
@@ -65,47 +84,49 @@ class SuperJobAPI(ParentApiClass):
 
 class Vacancy:
     """Класс вакансий"""
+
     def __init__(self, title, salary_from, salary_to, salary_currency, url, employer_name, address):
-        self.title = title
-        self.url = url
-        self.employer_name = employer_name
-        self.address = address
-        self.salary_from = salary_from
-        self.salary_to = salary_to
-        self.salary_currency = salary_currency
+        self.__title = title
+        self.__url = url
+        self.__employer_name = employer_name
+        self.__address = address
+        self._salary_from = salary_from
+        self._salary_to = salary_to
+        self._salary_currency = salary_currency
 
     def __str__(self):
-        if self.salary_currency:
-            self.salary_currency = f"Зарплата({self.salary_currency}) "
+        if self._salary_currency:
+            self._salary_currency = f"Зарплата({self._salary_currency}) "
         else:
-            self.salary_currency = "Зарплата не указана"
-        if self.salary_from:
-            self.salary_from = f"от:{self.salary_from}  "
+            self._salary_currency = "Зарплата не указана"
+        if self._salary_from:
+            self._salary_from = f"от:{self._salary_from}  "
         else:
-            self.salary_from = ""
-        if self.salary_to:
-            self.salary_to = f"до:{self.salary_to}"
+            self._salary_from = ""
+        if self._salary_to:
+            self._salary_to = f"до:{self._salary_to}"
         else:
-            self.salary_to = " "
-        if not self.address:
-            self.address = "Не указано"
-        msg = f"{self.employer_name}  :  {self.title}\n" \
-              f"URL вакансии: {self.url} \n" \
-              f"{self.salary_currency}{self.salary_from}{self.salary_to}\n" \
-              f"Адрес работодателя: {self.address}"
+            self._salary_to = " "
+        if not self.__address:
+            self.__address = "Не указано"
+        msg = f"{self.__employer_name}  :  {self.__title}\n" \
+              f"URL вакансии: {self.__url} \n" \
+              f"{self._salary_currency}{self._salary_from}{self._salary_to}\n" \
+              f"Адрес работодателя: {self.__address}"
         return msg
 
     def __gt__(self, other):
         """Метод сравнения по минимальной зарплате"""
-        if not other.salary_from:
+        if not other._salary_from:
             return True
-        if not self.salary_from:
+        if not self._salary_from:
             return False
-        return self.salary_from >= other.salary_from
+        return self._salary_from >= other._salary_from
 
 
-class JSONSaver:
+class JSONSaver(ParentJSONSaver):
     """Класс для работы с данными о вакансиях"""
+
     def __init__(self, key_word: str, name_file: str):
         self.__filename = f"{key_word.title()}_{name_file.lower()}.json"
 
@@ -174,41 +195,3 @@ class JSONSaver:
                     row["address"]))
 
         return vacansies_list
-
-#
-# if __name__ == "__main__":
-#     key_name = "python developer"
-#     superjob_api = SuperJobAPI()
-#     sj_vacancies = superjob_api.get_vacancies(key_name)
-#     json_saver = JSONSaver(key_name, "SJ")
-#     json_saver.add_vacancy(sj_vacancies)
-#     vacansies = json_saver.select()
-#
-#     sort_vacansies = get_vacancies_by_salary(vacansies, 40_000)
-#     sort_vacansies = sort_from_minimum_salary(sort_vacansies, True)
-#     top_vacs = get_top_vacancies(sort_vacansies, 5)
-#
-#     for i in top_vacs:
-#         print(i)
-#         print("\n", "=" * 100, "\n")
-#     print("\n\n", '*' * 100, "\n\n", "the end")
-#     print(len(top_vacs))
-
-    # if __name__ == "__main__":
-    #     key_name = "python developer"
-    #     hh_api = HeadHunterAPI()
-    #     hh_vacancies = hh_api.get_vacancies(key_name)
-    #     json_saver = JSONSaver(key_name, "HH")
-    #     json_saver.add_vacancy(hh_vacancies)
-    #     print("")
-    #     print("")
-    #     vacansies = json_saver.select()
-    #     sort_vacansies = sort_from_minimum_salary(vacansies, True)
-    #     # sort_vacansies = get_vacancies_by_salary(vacansies, 40000, 600000)
-    #     for row in sort_vacansies:
-    #         print(row)
-    #         print("")
-    #         print("=" * 100)
-    #         print("")
-    #     print("the end")
-    #     print(len(sort_vacansies))
