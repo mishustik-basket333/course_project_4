@@ -8,12 +8,12 @@ def get_vacancies_by_salary(list_vacancies: list, salary_from: int, salary_to: i
     """
     new_list = []
     for data in list_vacancies:
-        if data.salary_to and data.salary_from:
-            if data.salary_from >= salary_from and data.salary_to >= salary_to:
+        if data._salary_to and data._salary_from:
+            if data._salary_from >= salary_from and data._salary_to >= salary_to:
                 new_list.append(data)
                 continue
-        if data.salary_from and salary_to == 0:
-            if data.salary_from >= salary_from:
+        if data._salary_from and salary_to == 0:
+            if data._salary_from >= salary_from:
                 new_list.append(data)
     return new_list
 

@@ -1,4 +1,5 @@
-from classes import *
+from classes import JSONSaver, SuperJobAPI, HeadHunterAPI
+from functions import get_vacancies_by_salary, sort_from_minimum_salary, get_top_vacancies
 
 
 # Создание экземпляра класса для работы с API сайтов с вакансиями
@@ -51,41 +52,6 @@ def main():
             print("\n", "=" * 100, "\n")
 
     user_interaction()
-
-    # key_name = "python"
-
-    # hh_api = HeadHunterAPI()
-    # sj_api = SuperJobAPI()
-    #
-    # # Получение вакансий с разных платформ
-    # hh_vacancies = hh_api.get_vacancies(key_name)
-    # sj_vacancies = sj_api.get_vacancies(key_name)
-    #
-    #
-    # # Сохранение информации о вакансиях в файл
-    # json_saver_hh = JSONSaver(key_name, "HH")
-    # json_saver_hh.add_vacancy(hh_vacancies)
-    #
-    # json_saver_sj = JSONSaver(key_name, "SJ")
-    # json_saver_sj.add_vacancy(sj_vacancies)
-    #
-    # vacansies_hh = json_saver_hh.select()
-    # vacansies_sj = json_saver_sj.select()
-    #
-    # sort_vacansies_hh = get_vacancies_by_salary(vacansies_hh, 120_000, 250_000)
-    # sort_vacansies_sj = get_vacancies_by_salary(vacansies_sj, 40_000)
-    #
-    # sort_vacansies_hh = sort_from_minimum_salary(sort_vacansies_hh, True)
-    # sort_vacansies_sj = sort_from_minimum_salary(sort_vacansies_sj, True)
-    #
-    # top_vacansies_hh = get_top_vacancies(sort_vacansies_hh, 5)
-    # top_vacansies_sj = get_top_vacancies(sort_vacansies_sj, 5)
-    #
-    # for x in top_vacansies_hh:
-    #     print(x)
-    #     print("\n", "=" * 100, "\n")
-    #     print("\n\n", '*' * 100, "\n\n", "the end")
-    # print(len(top_vacansies_hh))
 
 
 if __name__ == "__main__":
